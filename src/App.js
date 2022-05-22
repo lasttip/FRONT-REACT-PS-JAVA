@@ -1,14 +1,12 @@
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Table } from './styles';
 import moment from 'moment';
-import Pagination from './Pagination';
-import api from './api/api';
+import Pagination from './components/Paginator';
 import Calendar from 'react-calendar/dist/umd/Calendar';
 
-
 function App() {
+  const API_BASE = 'http://127.0.0.1:9091/extrato';
   //API
   const [items, setItems] = useState([]);
   //filtro
@@ -22,44 +20,50 @@ function App() {
   const [busca, setBusca] = useState('');
 
   //busca dos dados api
-  useEffect(() => {
+  const Api = useEffect(() => {
     const fetchResourceTypes = async () => {
-      const response = await
-        fetch('http://127.0.0.1:9091/extrato')
-          .then(res => res.json())
-          .then(
-            (result) => {
-              setIsLoaded(true);
-              setData(result);
-              setItems(result);
-            },
-            (error) => {
-              setIsLoaded(true);
-              setError(error);
-            }
-          )
+      const response = await fetch(API_BASE,
+        {
+          // header('Access-Control-Allow-Origin: *'); 
+          // headers =("Access-Control-Allow-Origin": "*")
+          //body: 'foo=bar&blah=1'
+        })
+        .then(res => res.json())
+        .then((result) => {
+          setIsLoaded(true);
+          setData(result);
+          setItems(result);
+          return result;
+        },
+          (error) => {
+            setIsLoaded(true);
+            setError(error);
+          }
+        )
     };
     fetchResourceTypes();
   }, [])
+
+
 
   //Atualiza items sempre que data alterar.
   useEffect(() => {
     setItems(data);
   }, [setData])
 
-   const handleChange = ({target}) =>{
-     if(!target.value){
-       setItems(data);
-       return
-     }
+  const handleChange = ({ target }) => {
+    if (!target.value) {
+      setItems(data);
+      return
+    }
 
-     setBusca(target.value)
+    setBusca(target.value)
     const lowerBusca = busca.toLowerCase();
-     console.log(lowerBusca)
+    console.log(lowerBusca)
 
     const filtrados = data.filter((data) => data.nome_operador_transacao.includes(lowerBusca))
-     setItems(filtrados)
-   }
+    setItems(filtrados)
+  }
 
   //soma do saldo total
   const total = data.reduce((resultado, quantidade) => {
@@ -73,84 +77,72 @@ function App() {
     return <div>Loading...</div>;
   } else {
     return (
-      <div className="App">
-        <div>
-          <div className='App-busca'>
-            <table className='App-table-filter'>
-              <thead>
-                <tr>
-                  <th><span>Data de Início</span></th>
-                  <th><span >Data de Fim</span></th>
-                  <th><span >Nome operador transação</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
+      <div className="page">
+        <section className="lists">
+          <form>
+            <div className='lineOne'>
+              <input id="inicioPeriodo" type="date"
+                name="inicioPeriodo"
+                placeholder="Data Início" />
 
-                  <td><input id="fimPeriodo" type="date"
-                    name="fimPeriodo"
-                    placeholder="Data Início" /></td>
+              <input id="fimPeriodo" type="date"
+                name="fimPeriodo"
+                placeholder="Data Fim" />
 
-                  <td><input id="inicioPeriodo" type="date"
-                    name="inicioPeriodo"
-                  />
-                  </td>
-                  <td><input type="text"
-                    className="form-input"
-                    onChange={handleChange} 
-                    id="input-table"
-                    name="nomeOperador"
-                  /></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              <input type="text"
+                className="form-input"
+                onChange={handleChange}
+                id="input-table"
+                name="nomeOperador"
+              />
 
-          <div className='search-btn'>
-            <button id="searchBtn">Pesquisar</button>
-          </div>
+            </div>
+
+
+            <div className="btnSearch">
+              <a className="btnBody" href='/'  > Pesquisar </a>
+            </div>
+
+          </form>
 
           <div className='saldo'>
-
             <span className='sp1'>Saldo total: R$ {total.toLocaleString('pt-br', { minimumFractionDigits: 2 })} </span>
-
             <span className='sp2'>Saldo período: R$ </span>
 
           </div>
-
-          <Table>
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Valor</th>
-                <th>Tipo</th>
-                <th>Nome operador transação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map(operation => (
-                <tr key={operation.id}>
-                  <td> {moment.utc(operation.data_transferencia).format('DD/MM/YYYY')} </td>
-                  <td>R$ {operation.valor.toLocaleString('pt-br', { minimumFractionDigits: 2 }).replace(".", ",")} </td>
-
-                  <td> {operation.tipo} </td>
-                  <td> {operation.nome_operador_transacao} </td>
-
+         
+            <table className='table'>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Valor</th>
+                  <th>Tipo</th>
+                  <th>Nome operador transação</th>
                 </tr>
-              ))}
-            </tbody>
+              </thead>
+              <tbody>
+                {items.map(operation => (
+                  <tr key={operation.id}>
+                    <td className='App-table-td'> {moment.utc(operation.data_transferencia).format('DD/MM/YYYY')} </td>
+                    <td className='App-table-td'>R$ {operation.valor.toLocaleString('pt-br', { minimumFractionDigits: 2 }).replace(".", ",")} </td>
 
-          </Table>
+                    <td className='App-table-td'> {operation.tipo} </td>
+                    <td className='App-table-td'> {operation.nome_operador_transacao} </td>
 
-        </div>
-        <Pagination />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+       
+          <Pagination />
+
+        </section>
+        <footer className='footer'>
+          2022
+        </footer>
       </div>
     );
   }
 }
-
-
-
-
 
 export default App;
