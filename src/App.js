@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import moment from 'moment';
 import Pagination from './components/Paginator';
-import Calendar from 'react-calendar/dist/umd/Calendar';
+// import Calendar from 'react-calendar/dist/umd/Calendar';
 
 function App() {
-  const API_BASE = 'http://127.0.0.1:9091/extrato';
+  const API_BASE = 'http://127.0.0.1:8090/extrato';
   //API
   const [items, setItems] = useState([]);
   //filtro
@@ -36,7 +36,7 @@ function App() {
           return result;
         },
           (error) => {
-            setIsLoaded(true);
+            setIsLoaded(false);
             setError(error);
           }
         )

@@ -1,8 +1,10 @@
 
 
-#Front React 
+# Consumindo api java com Front React 
+*Para utilizar após npm install, use nom outdate para verificar pacotes defasados.
+*ao atualizar foi necessário reinstalar o babel, npm install babel.
 
-#axios
+#fetch
 conexão com api
 #styled
 transforma css em javascript
@@ -12,4 +14,4 @@ formata data
 selecionar data
 #Backend api Java-spring
 
-#update 220522 css
+*futere: componentizar 
