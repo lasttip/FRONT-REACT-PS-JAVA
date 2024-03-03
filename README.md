@@ -1,15 +1,30 @@
+# Extrato Bancário
+
+ Esse sistema é o front-end de uma aplicaão bancária, desenvolvido para simular o caso de uso de extrado 
+ bancário.
+
+:construction: Projeto em construção :construction:
+ 
+# :hammer: Funcionalidades
+
+- Disponibilizar Exibe as movimentações bancárias na interface do cliente, relativas ao perdíodo inserido
+no filtro por meio de API. 
+
+# Tecnologias
+
+- Reactjs
+- vscode
+  
 
 
-#Front React 
 
-#axios
-conexão com api
-#styled
-transforma css em javascript
-#moment
-formata data
-#react calender
-selecionar data
-#Backend api Java-spring
 
-#update 220522 css
+
+
+
+
+# Licença 
+MT
+
+
+
